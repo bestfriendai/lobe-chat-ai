@@ -1,7 +1,7 @@
 export default {
   pluginSettings: {
     desc: '完成以下配置，即可开始使用该插件',
-    title: '{{name}}插件配置',
+    title: '{{name}} 插件配置',
   },
   response: {
     400: '很抱歉，服务器不明白您的请求，请确认您的请求参数是否正确',
@@ -29,11 +29,19 @@ export default {
     PluginSettingsInvalid: '该插件需要正确配置后才可以使用，请检查你的配置是否正确',
     PluginServerError:
       '插件服务端请求返回出错，请检查根据下面的报错信息检查你的插件描述文件、插件配置或服务端实现',
+    PluginGatewayError: '很抱歉，插件网关出现错误，请检查插件网关配置是否正确',
+    PluginOpenApiInitError: '很抱歉，OpenAPI 客户端初始化失败，请检查 OpenAPI 的配置信息是否正确',
 
     InvalidAccessCode: '密码不正确或为空，请输入正确的访问密码，或者添加自定义 OpenAI API Key',
     OpenAIBizError: '请求 OpenAI 服务出错，请根据以下信息排查或重试',
     NoAPIKey: 'OpenAI API Key 为空，请添加自定义 OpenAI API Key',
     /* eslint-enable */
+  },
+  stt: {
+    responseError: '服务请求失败，请检查配置或重试',
+  },
+  tts: {
+    responseError: '服务请求失败，请检查配置或重试',
   },
   unlock: {
     apikey: {
@@ -45,6 +53,7 @@ export default {
     confirm: '确认并重试',
     password: {
       description: '管理员已开启应用加密，输入应用密码后即可解锁应用。密码只需填写一次',
+      placeholder: '请输入密码',
       title: '输入密码解锁应用',
     },
   },

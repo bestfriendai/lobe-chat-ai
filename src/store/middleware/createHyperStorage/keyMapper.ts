@@ -5,12 +5,13 @@ export const createKeyMapper = (options: HyperStorageOptions) => {
     key: string,
     mode: keyof HyperStorageOptions = 'localStorage',
   ) => {
-    const selectors = options[mode]?.selectors;
+    const media = options[mode];
+    if (media === false) return key;
+
+    const selectors = media?.selectors;
     if (!selectors) return key;
 
     let storageKey: string | undefined;
-
-    if (!selectors) return key;
 
     for (const selector of selectors) {
       if (typeof selector === 'string') {
@@ -27,7 +28,10 @@ export const createKeyMapper = (options: HyperStorageOptions) => {
     key: string,
     mode: keyof HyperStorageOptions = 'localStorage',
   ) => {
-    const selectors = options[mode]?.selectors;
+    const media = options[mode];
+    if (media === false) return key;
+
+    const selectors = media?.selectors;
     if (!selectors) return key;
 
     let stateKey: string | undefined;

@@ -10,18 +10,33 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import { DEFAULT_SETTINGS } from '@/const/settings';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
 import { localeOptions } from '@/locales/options';
-import { settingsSelectors, useGlobalStore } from '@/store/global';
+import { useChatStore } from '@/store/chat';
+import { useFileStore } from '@/store/file';
+import { useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
+import { useToolStore } from '@/store/tool';
 import { switchLang } from '@/utils/switchLang';
 
 import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from '../features/ThemeSwatches';
 
 type SettingItemGroup = ItemGroup;
 
-const Common = memo(() => {
+export interface SettingsCommonProps {
+  showAccessCodeConfig: boolean;
+}
+
+const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig }) => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
+
   const clearSessions = useSessionStore((s) => s.clearSessions);
+  const [clearTopics, clearAllMessages] = useChatStore((s) => [
+    s.removeAllTopics,
+    s.clearAllMessages,
+  ]);
+  const [removeAllFiles] = useFileStore((s) => [s.removeAllFiles]);
+  const removeAllPlugins = useToolStore((s) => s.removeAllPlugins);
 
   const settings = useGlobalStore(settingsSelectors.currentSettings, isEqual);
   const [setThemeMode, setSettings, resetSettings] = useGlobalStore((s) => [
@@ -45,6 +60,7 @@ const Common = memo(() => {
       title: t('danger.reset.confirm'),
     });
   }, []);
+
   const handleClear = useCallback(() => {
     modal.confirm({
       cancelText: t('cancel', { ns: 'common' }),
@@ -53,8 +69,13 @@ const Common = memo(() => {
         danger: true,
       },
       okText: t('ok', { ns: 'common' }),
-      onOk: () => {
-        clearSessions();
+      onOk: async () => {
+        await clearSessions();
+        await removeAllPlugins();
+        await clearTopics();
+        await removeAllFiles();
+        await clearAllMessages();
+
         message.success(t('danger.clear.success'));
       },
       title: t('danger.clear.confirm'),
@@ -111,7 +132,33 @@ const Common = memo(() => {
         name: 'language',
       },
       {
-        children: <SliderWithInput max={18} min={12} />,
+        children: (
+          <SliderWithInput
+            marks={{
+              12: {
+                label: t('settingTheme.fontSize.marks.small'),
+                style: {
+                  marginTop: 4,
+                },
+              },
+              14: {
+                label: t('settingTheme.fontSize.marks.normal'),
+                style: {
+                  marginTop: 4,
+                },
+              },
+              18: {
+                label: t('settingTheme.fontSize.marks.large'),
+                style: {
+                  marginTop: 4,
+                },
+              },
+            }}
+            max={18}
+            min={12}
+            step={1}
+          />
+        ),
         desc: t('settingTheme.fontSize.desc'),
         label: t('settingTheme.fontSize.title'),
         name: 'fontSize',
@@ -138,6 +185,7 @@ const Common = memo(() => {
       {
         children: <Input.Password placeholder={t('settingSystem.accessCode.placeholder')} />,
         desc: t('settingSystem.accessCode.desc'),
+        hidden: !showAccessCodeConfig,
         label: t('settingSystem.accessCode.title'),
         name: 'password',
       },
@@ -157,8 +205,8 @@ const Common = memo(() => {
             {t('danger.clear.action')}
           </Button>
         ),
-        desc: t('danger.clear.title'),
-        label: t('danger.clear.desc'),
+        desc: t('danger.clear.desc'),
+        label: t('danger.clear.title'),
         minWidth: undefined,
       },
     ],

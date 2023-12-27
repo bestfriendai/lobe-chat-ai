@@ -5,37 +5,8 @@ import { LocaleMode } from '@/types/locale';
 import type { LobeAgentSession } from '@/types/session';
 
 export interface GlobalBaseSettings {
-  /**
-   * @deprecated
-   */
-  OPENAI_API_KEY?: string;
-
   avatar: string;
-  /**
-   * @deprecated
-   */
-  compressThreshold?: number;
-  /**
-   * @deprecated
-   */
-  enableCompressThreshold?: boolean;
-  /**
-   * @deprecated
-   */
-  enableHistoryCount?: boolean;
-  /**
-   * @deprecated
-   */
-  enableMaxTokens?: boolean;
-  /**
-   * @deprecated
-   */
-  endpoint?: string;
   fontSize: number;
-  /**
-   * @deprecated
-   */
-  historyCount?: number;
   language: LocaleMode;
   neutralColor?: NeutralColors;
   password: string;
@@ -44,6 +15,8 @@ export interface GlobalBaseSettings {
 }
 
 export type GlobalDefaultAgent = Pick<LobeAgentSession, 'config' | 'meta'>;
+
+export type CustomModels = { displayName: string; name: string }[];
 
 export interface OpenAIConfig {
   OPENAI_API_KEY: string;
@@ -57,18 +30,39 @@ export interface OpenAIConfig {
   useAzure?: boolean;
 }
 
-export type GlobalLLMConfig = {
+export interface GlobalLLMConfig {
   openAI: OpenAIConfig;
-};
+}
+
+export type STTServer = 'openai' | 'browser';
+export interface GlobalTTSConfig {
+  openAI: {
+    sttModel: 'whisper-1';
+    ttsModel: 'tts-1' | 'tts-1-hd';
+  };
+  sttAutoStop: boolean;
+  sttServer: STTServer;
+}
 
 export type LLMBrand = keyof GlobalLLMConfig;
 
+export interface GlobalTool {
+  dalle: {
+    autoGenerate: boolean;
+  };
+}
 /**
  * 配置设置
  */
 export interface GlobalSettings extends GlobalBaseSettings {
   defaultAgent: GlobalDefaultAgent;
   languageModel: GlobalLLMConfig;
+  tool: GlobalTool;
+  tts: GlobalTTSConfig;
 }
 
 export type ConfigKeys = keyof GlobalSettings;
+
+export interface GlobalServerConfig {
+  customModelName?: string;
+}

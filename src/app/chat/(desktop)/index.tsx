@@ -5,15 +5,15 @@ import { FC, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import ResponsiveIndex from '@/components/ResponsiveIndex';
+import Conversation from '@/features/Conversation';
 
-import Conversation from '../features/Conversation';
 import PageTitle from '../features/PageTitle';
 import ChatHeader from './features/ChatHeader';
 import ChatInput from './features/ChatInput';
 import SideBar from './features/SideBar';
 import Layout from './layout.desktop';
 
-const Mobile: FC = dynamic(() => import('../(mobile)')) as FC;
+const Mobile: FC = dynamic(() => import('../(mobile)'), { ssr: false }) as FC;
 
 const DesktopPage = memo(() => (
   <ResponsiveIndex Mobile={Mobile}>

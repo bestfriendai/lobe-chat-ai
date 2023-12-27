@@ -1,19 +1,23 @@
+import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import Header from './Header';
 import { Topic } from './Topic';
 import TopicSearchBar from './TopicSearchBar';
 
-const TopicListContent = () => {
+const TopicListContent = memo<{ mobile?: boolean }>(({ mobile }) => {
   return (
-    <Flexbox height={'100%'} style={{ overflow: 'hidden' }}>
-      <Flexbox padding={16}>
-        <TopicSearchBar />
-      </Flexbox>
-      <Flexbox gap={16} paddingInline={16} style={{ overflowY: 'auto', position: 'relative' }}>
+    <Flexbox gap={mobile ? 8 : 0} height={'100%'} style={{ overflow: 'hidden' }}>
+      {mobile ? <TopicSearchBar /> : <Header />}
+      <Flexbox
+        gap={16}
+        paddingInline={mobile ? 0 : 8}
+        style={{ overflowY: 'auto', paddingTop: 6, position: 'relative' }}
+      >
         <Topic />
       </Flexbox>
     </Flexbox>
   );
-};
+});
 
 export default TopicListContent;

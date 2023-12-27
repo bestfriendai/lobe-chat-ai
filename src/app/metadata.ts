@@ -1,10 +1,8 @@
 import { Metadata } from 'next';
 
-import { genSiteHeadTitle } from '@/utils/genSiteHeadTitle';
-
 import pkg from '../../package.json';
 
-const title = genSiteHeadTitle();
+const title = 'LobeChat';
 const { description, homepage } = pkg;
 const metadata: Metadata = {
   appleWebApp: {
@@ -42,10 +40,7 @@ const metadata: Metadata = {
     type: 'website',
     url: homepage,
   },
-  themeColor: [
-    { color: '#f8f8f8', media: '(prefers-color-scheme: light)' },
-    { color: '#000', media: '(prefers-color-scheme: dark)' },
-  ],
+
   title: {
     default: title,
     template: '%s · LobeChat',
@@ -58,14 +53,6 @@ const metadata: Metadata = {
       'https://registry.npmmirror.com/@lobehub/assets-favicons/latest/files/assets/og-960x540.png',
     ],
     title,
-  },
-  viewport: {
-    initialScale: 1,
-    maximumScale: 1,
-    minimumScale: 1,
-    userScalable: false,
-    viewportFit: 'cover',
-    width: 'device-width',
   },
 };
 

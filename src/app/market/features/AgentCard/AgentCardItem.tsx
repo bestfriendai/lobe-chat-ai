@@ -13,13 +13,16 @@ import AgentCardBanner from './AgentCardBanner';
 import { useStyles } from './style';
 
 const { Paragraph } = Typography;
+
 const AgentCardItem = memo<AgentsMarketIndexItem>(({ meta, identifier }) => {
   const ref = useRef(null);
   const isHovering = useHover(ref);
   const onAgentCardClick = useMarketStore((s) => s.activateAgent);
-  const { avatar, title, description, tags, backgroundColor } = meta;
   const { styles, theme } = useStyles();
   const { isDarkMode } = useThemeMode();
+
+  const { avatar, title, description, tags, backgroundColor } = meta;
+
   return (
     <Flexbox className={styles.container} onClick={() => onAgentCardClick(identifier)}>
       <AgentCardBanner meta={meta} style={{ opacity: isDarkMode ? 0.9 : 0.4 }} />
@@ -28,7 +31,6 @@ const AgentCardItem = memo<AgentsMarketIndexItem>(({ meta, identifier }) => {
           animation={isHovering}
           avatar={avatar}
           background={backgroundColor || theme.colorFillTertiary}
-          className={styles.avatar}
           size={56}
         />
         <Paragraph className={styles.title} ellipsis={{ rows: 1, tooltip: title }}>
@@ -38,7 +40,7 @@ const AgentCardItem = memo<AgentsMarketIndexItem>(({ meta, identifier }) => {
           {description}
         </Paragraph>
         <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
-          {(tags as string[]).map((tag: string, index) => (
+          {(tags as string[]).filter(Boolean).map((tag: string, index) => (
             <Tag key={index} style={{ margin: 0 }}>
               {startCase(tag).trim()}
             </Tag>

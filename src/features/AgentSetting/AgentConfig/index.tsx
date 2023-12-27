@@ -8,7 +8,8 @@ import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { settingsSelectors, useGlobalStore } from '@/store/global';
+import { useGlobalStore } from '@/store/global';
+import { settingsSelectors } from '@/store/global/selectors';
 
 import { useStore } from '../store';
 
@@ -55,10 +56,26 @@ const AgentConfig = memo(() => {
         minWidth: undefined,
       },
       {
-        children: <Input placeholder={t('settingChat.inputTemplate.placeholder')} />,
+        children: <Input.TextArea placeholder={t('settingChat.inputTemplate.placeholder')} />,
         desc: t('settingChat.inputTemplate.desc'),
         label: t('settingChat.inputTemplate.title'),
         name: 'inputTemplate',
+      },
+      {
+        children: <Switch />,
+        desc: t('settingChat.enableAutoCreateTopic.desc'),
+        label: t('settingChat.enableAutoCreateTopic.title'),
+        minWidth: undefined,
+        name: 'enableAutoCreateTopic',
+        valuePropName: 'checked',
+      },
+      {
+        children: <SliderWithInput max={8} min={0} />,
+        desc: t('settingChat.autoCreateTopicThreshold.desc'),
+        divider: false,
+        hidden: !config.enableAutoCreateTopic,
+        label: t('settingChat.autoCreateTopicThreshold.title'),
+        name: 'autoCreateTopicThreshold',
       },
       {
         children: <Switch />,
@@ -68,7 +85,7 @@ const AgentConfig = memo(() => {
         valuePropName: 'checked',
       },
       {
-        children: <SliderWithInput max={32} min={0} />,
+        children: <SliderWithInput max={32} min={1} />,
         desc: t('settingChat.historyCount.desc'),
         divider: false,
         hidden: !config.enableHistoryCount,
@@ -98,7 +115,14 @@ const AgentConfig = memo(() => {
   const model: ItemGroup = {
     children: [
       {
-        children: <Select options={modelList.map((value) => ({ label: value, value }))} />,
+        children: (
+          <Select
+            options={modelList.map(({ name, displayName }) => ({
+              label: displayName,
+              value: name,
+            }))}
+          />
+        ),
         desc: t('settingModel.model.desc'),
         label: t('settingModel.model.title'),
         name: 'model',

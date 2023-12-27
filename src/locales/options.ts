@@ -1,5 +1,7 @@
 import type { Locales } from '@/types/locale';
 
+import { locales } from './resources';
+
 type LocaleOptions = {
   label: string;
   value: Locales;
@@ -27,9 +29,41 @@ export const localeOptions: LocaleOptions = [
     value: 'ko-KR',
   },
   {
-    label: 'Russian',
+    label: 'Deutsch',
+    value: 'de-DE',
+  },
+  {
+    label: 'Español',
+    value: 'es-ES',
+  },
+  {
+    label: 'Français',
+    value: 'fr-FR',
+  },
+  {
+    label: 'Português',
+    value: 'pt-BR',
+  },
+  {
+    label: 'Русский',
     value: 'ru-RU',
+  },
+  {
+    label: 'Türkçe',
+    value: 'tr-TR',
+  },
+  {
+    label: 'Polski',
+    value: 'pl-PL',
+  },
+  {
+    label: 'Nederlands',
+    value: 'nl-NL',
+  },
+  {
+    label: 'Italiano',
+    value: 'it-IT',
   },
 ] as LocaleOptions;
 
-export const supportLangs: string[] = localeOptions.map((i) => i.value);
+export const supportLocales: string[] = [...locales, 'en', 'zh'];

@@ -1,49 +1,46 @@
-import { ActionIcon, MobileNavBar, MobileNavBarTitle } from '@lobehub/ui';
-import { LayoutList, Settings } from 'lucide-react';
+import { MobileNavBar } from '@lobehub/ui';
 import { useRouter } from 'next/navigation';
-import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { memo, useState } from 'react';
 
-import { MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
-import { useGlobalStore } from '@/store/global';
-import { useSessionStore } from '@/store/session';
-import { agentSelectors, sessionSelectors } from '@/store/session/selectors';
-import { pathString } from '@/utils/url';
-
+import SettingButton from '../../features/ChatHeader/SettingButton';
 import ShareButton from '../../features/ChatHeader/ShareButton';
+import ChatHeaderTitle from './ChatHeaderTitle';
 
 const MobileHeader = memo(() => {
-  const { t } = useTranslation('common');
   const router = useRouter();
+  const [open, setOpen] = useState(false);
 
-  const [isInbox, title] = useSessionStore((s) => [
-    sessionSelectors.isInboxSession(s),
-    agentSelectors.currentAgentTitle(s),
-  ]);
-
-  const [toggleConfig] = useGlobalStore((s) => [s.toggleMobileTopic]);
-
-  const displayTitle = isInbox ? t('inbox.title') : title;
+  // const items: MenuProps['items'] = [
+  //   {
+  //     icon: <Icon icon={Share2} />,
+  //     key: 'share',
+  //     label: t('share', { ns: 'common' }),
+  //     onClick: () => setOpen(true),
+  //   },
+  //   !isInbox && {
+  //     icon: <Icon icon={Settings} />,
+  //     key: 'settings',
+  //     label: t('header.session', { ns: 'setting' }),
+  //     onClick: () => router.push(pathString('/chat/settings', { hash: location.hash })),
+  //   },
+  // ].filter(Boolean) as MenuProps['items'];
 
   return (
     <MobileNavBar
-      center={<MobileNavBarTitle title={displayTitle} />}
+      center={<ChatHeaderTitle />}
       onBackClick={() => router.push('/chat')}
       right={
         <>
-          <ShareButton />
-          <ActionIcon
-            icon={LayoutList}
-            onClick={() => toggleConfig()}
-            size={MOBILE_HEADER_ICON_SIZE}
-          />
-          {!isInbox && (
-            <ActionIcon
-              icon={Settings}
-              onClick={() => router.push(pathString('/chat/settings', { hash: location.hash }))}
-              size={MOBILE_HEADER_ICON_SIZE}
-            />
-          )}
+          <ShareButton mobile open={open} setOpen={setOpen} />
+          <SettingButton mobile />
+          {/*<Dropdown*/}
+          {/*  menu={{*/}
+          {/*    items,*/}
+          {/*  }}*/}
+          {/*  trigger={['click']}*/}
+          {/*>*/}
+          {/*  <ActionIcon icon={MoreHorizontal} />*/}
+          {/*</Dropdown>*/}
         </>
       }
       showBackButton
